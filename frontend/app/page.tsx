@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Button from "@/components/Button";
 import TrustStats from "@/components/TrustStats";
 import WhyStudyBuddy from "@/components/WhyStudyBuddy";
+import HowItWorks from "@/components/HowItWorks";
 export default function Home() {
   return (
     <main className="min-h-screen">
@@ -53,6 +54,7 @@ export default function Home() {
       {/* Trust Stats */}
       <TrustStats />
       <WhyStudyBuddy />
+      <HowItWorks />
     </main>
   );
 }
