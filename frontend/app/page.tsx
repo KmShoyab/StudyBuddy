@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Button from "@/components/Button";
-import TrustStats from "@/components/TrustStats"; 
-
+import TrustStats from "@/components/TrustStats";
+import WhyStudyBuddy from "@/components/WhyStudyBuddy";
 export default function Home() {
   return (
     <main className="min-h-screen">
@@ -48,11 +48,11 @@ export default function Home() {
             <Button variant="secondary">See How It Works</Button>
           </div>
         </div>
-            </section>
+      </section>
 
       {/* Trust Stats */}
       <TrustStats />
-
+      <WhyStudyBuddy />
     </main>
   );
 }
