@@ -31,6 +31,21 @@
   --radius-xl: 1.5rem;
   --radius-full: 9999px;
 }
+html.light {
+  --background: #f7f7fb;
+  --foreground: #11111a;
+
+  --surface: #ffffff;
+  --surface-soft: #f1f1f6;
+  --surface-elevated: #ffffff;
+
+  --border: rgba(17, 17, 26, 0.08);
+  --border-strong: rgba(17, 17, 26, 0.14);
+
+  --text-primary: #11111a;
+  --text-secondary: #4b4b5a;
+  --text-muted: #777787;
+}
 
 * {
   box-sizing: border-box;
@@ -56,6 +71,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 
   min-height: 100vh;
+  transition:
+  background-color 300ms ease,
+  color 300ms ease;
 }
 
 button,
@@ -211,4 +229,43 @@ a {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+/* Theme-aware utility helpers */
+
+.theme-surface {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+.theme-surface-soft {
+  background: var(--surface-soft);
+  border-color: var(--border);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-text-muted {
+  color: var(--text-muted);
+}
+
+.theme-border {
+  border-color: var(--border);
+}
+
+.theme-border-strong {
+  border-color: var(--border-strong);
+}
+
+.theme-transition {
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    box-shadow 300ms ease;
 }

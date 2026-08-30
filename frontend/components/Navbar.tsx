@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -8,8 +9,7 @@ export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-        <nav className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/30 px-4 py-3 shadow-2xl shadow-black/10 backdrop-blur-xl">
-          
+        <nav className="theme-transition flex items-center justify-between rounded-2xl border bg-[var(--surface)]/80 px-4 py-3 shadow-2xl shadow-black/10 backdrop-blur-xl">
           {/* Logo */}
           <a
             href="/"
@@ -22,7 +22,7 @@ export default function Navbar() {
               <span className="absolute inset-0 -translate-x-full bg-white/20 transition-transform duration-500 group-hover:translate-x-full" />
             </span>
 
-            <span className="text-lg font-bold tracking-tight">
+            <span className="theme-text-primary text-lg font-bold tracking-tight">
               Study<span className="text-violet-400">Buddy</span>
             </span>
           </a>
@@ -35,7 +35,10 @@ export default function Navbar() {
           </div>
 
           {/* Desktop actions */}
+          {/* Desktop actions */}
           <div className="hidden items-center gap-3 md:flex">
+            <ThemeToggle />
+
             <button className="rounded-full px-4 py-2 text-sm font-medium text-zinc-400 transition hover:bg-white/5 hover:text-white">
               Sign in
             </button>
@@ -59,7 +62,7 @@ export default function Navbar() {
 
         {/* Mobile navigation */}
         <div
-          className={`mt-2 overflow-hidden rounded-2xl border border-white/10 bg-black/70 backdrop-blur-xl transition-all duration-300 md:hidden ${
+          className={`theme-transition mt-2 overflow-hidden rounded-2xl border bg-[var(--surface)]/95 backdrop-blur-xl transition-all duration-300 md:hidden ${
             mobileMenuOpen
               ? "max-h-[500px] translate-y-0 opacity-100"
               : "pointer-events-none max-h-0 -translate-y-2 opacity-0"
@@ -113,7 +116,7 @@ function NavLink({
   return (
     <a
       href={href}
-      className="rounded-full px-4 py-2 text-sm text-zinc-400 transition hover:bg-white/5 hover:text-white"
+      className="theme-text-muted rounded-full px-4 py-2 text-sm transition hover:bg-black/5 hover:text-[var(--text-primary)] dark:hover:bg-white/5"
     >
       {children}
     </a>
@@ -133,7 +136,7 @@ function MobileNavLink({
     <a
       href={href}
       onClick={onClick}
-      className="rounded-xl px-4 py-3 text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
+      className="theme-text-secondary rounded-xl px-4 py-3 text-sm transition hover:bg-black/5 hover:text-[var(--text-primary)] dark:hover:bg-white/5"
     >
       {children}
     </a>
