@@ -8,6 +8,7 @@ import FeatureShowcase from "@/components/FeatureShowcase";
 import StudyModes from "@/components/StudyModes";
 import Testimonials from "@/components/Testimonials";
 import FinalCTA from "@/components/FinalCTA";
+import Footer from "@/components/Footer";
 export default function Home() {
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden">
@@ -65,6 +66,7 @@ export default function Home() {
       <StudyModes />
       <Testimonials />
       <FinalCTA />
+      <Footer />
     </main>
   );
 }
