@@ -269,3 +269,18 @@ a {
     color 300ms ease,
     box-shadow 300ms ease;
 }
+/* Responsive viewport containment */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+* {
+  max-width: 100%;
+}
