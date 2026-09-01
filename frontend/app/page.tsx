@@ -7,6 +7,7 @@ import SmartMatching from "@/components/SmartMatching";
 import FeatureShowcase from "@/components/FeatureShowcase";
 import StudyModes from "@/components/StudyModes";
 import Testimonials from "@/components/Testimonials";
+import FinalCTA from "@/components/FinalCTA";
 export default function Home() {
   return (
     <main className="min-h-screen w-full max-w-full overflow-x-hidden">
@@ -63,6 +64,7 @@ export default function Home() {
       <FeatureShowcase />
       <StudyModes />
       <Testimonials />
+      <FinalCTA />
     </main>
   );
 }
