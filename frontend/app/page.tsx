@@ -4,6 +4,8 @@ import TrustStats from "@/components/TrustStats";
 import WhyStudyBuddy from "@/components/WhyStudyBuddy";
 import HowItWorks from "@/components/HowItWorks";
 import SmartMatching from "@/components/SmartMatching";
+import FeatureShowcase from "@/components/FeatureShowcase";
+import StudyModes from "@/components/StudyModes";
 export default function Home() {
   return (
     <main className="min-h-screen">
@@ -57,6 +59,8 @@ export default function Home() {
       <WhyStudyBuddy />
       <HowItWorks />
       <SmartMatching />
+      <FeatureShowcase />
+      <StudyModes />
     </main>
   );
 }
