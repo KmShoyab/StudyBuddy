@@ -53,6 +53,9 @@ const stats = [
 
 export default function Dashboard() {
   const [connectionRequests, setConnectionRequests] = useState<string[]>([]);
+  const [selectedBuddy, setSelectedBuddy] = useState<
+    (typeof recommendedBuddies)[number] | null
+  >(null);
 
   const handleConnect = (name: string) => {
     setConnectionRequests((current) => {
@@ -290,7 +293,10 @@ export default function Dashboard() {
                       : "Connect"}
                   </button>
 
-                  <button className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-zinc-300 transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white">
+                  <button
+                    onClick={() => setSelectedBuddy(buddy)}
+                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-zinc-200 transition hover:border-violet-400/30 hover:bg-violet-500/10 hover:text-white"
+                  >
                     Profile
                   </button>
                 </div>
@@ -299,6 +305,117 @@ export default function Dashboard() {
           </div>
         </div>
       </section>
+      {selectedBuddy && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+          onClick={() => setSelectedBuddy(null)}
+        >
+          <div
+            className="w-full max-w-lg rounded-3xl border border-white/10 bg-[#0b0d14] p-6 shadow-2xl shadow-violet-950/40"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-white ring-1 ring-white/10">
+                  {selectedBuddy.initials}
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-bold text-white">
+                    {selectedBuddy.name}
+                  </h2>
+
+                  <p className="mt-1 text-sm text-zinc-400">
+                    {selectedBuddy.university}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSelectedBuddy(null)}
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-400 transition hover:bg-white/10 hover:text-white"
+                aria-label="Close profile"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-violet-400/10 bg-violet-500/5 p-5">
+              <p className="text-sm text-zinc-400">Study compatibility</p>
+
+              <div className="mt-2 flex items-end gap-2">
+                <span className="text-4xl font-extrabold text-white">
+                  {selectedBuddy.compatibility}%
+                </span>
+
+                <span className="mb-1 text-sm text-emerald-300">
+                  Strong match
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <p className="text-sm font-semibold text-zinc-300">
+                Common subjects
+              </p>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedBuddy.subjects.map((subject) => (
+                  <span
+                    key={subject}
+                    className="rounded-full border border-violet-400/10 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200"
+                  >
+                    {subject}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <p className="text-xs text-zinc-500">Study style</p>
+
+                <p className="mt-1 font-semibold text-white">
+                  {selectedBuddy.studyStyle}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <p className="text-xs text-zinc-500">Study time</p>
+
+                <p className="mt-1 font-semibold text-white">
+                  {selectedBuddy.studyTime}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3">
+              <button
+                onClick={() => {
+                  handleConnect(selectedBuddy.name);
+                }}
+                disabled={connectionRequests.includes(selectedBuddy.name)}
+                className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                  connectionRequests.includes(selectedBuddy.name)
+                    ? "border border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+                    : "bg-violet-500 text-white hover:bg-violet-400"
+                }`}
+              >
+                {connectionRequests.includes(selectedBuddy.name)
+                  ? "Request Sent ✓"
+                  : "Connect"}
+              </button>
+
+              <button
+                onClick={() => setSelectedBuddy(null)}
+                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/10 hover:text-white"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
