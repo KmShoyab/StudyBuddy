@@ -1,5 +1,8 @@
 "use client";
 
+import { useState } from "react";
+import Navbar from "@/components/Navbar";
+
 const recommendedBuddies = [
   {
     name: "Abid Abdullah",
@@ -30,9 +33,6 @@ const recommendedBuddies = [
   },
 ];
 
-import { useState } from "react";
-import Navbar from "@/components/Navbar";
-
 const stats = [
   {
     label: "Profile strength",
@@ -53,6 +53,7 @@ const stats = [
 
 export default function Dashboard() {
   const [connectionRequests, setConnectionRequests] = useState<string[]>([]);
+
   const [selectedBuddy, setSelectedBuddy] = useState<
     (typeof recommendedBuddies)[number] | null
   >(null);
@@ -66,6 +67,34 @@ export default function Dashboard() {
       return [...current, name];
     });
   };
+
+  const quickActions = [
+    {
+      title: "Find StudyBuddies",
+      description: "Discover students who match your learning style.",
+      icon: "⌕",
+      href: "#recommendations",
+    },
+    {
+      title: "Edit Profile",
+      description: "Keep your academic profile up to date.",
+      icon: "✦",
+      href: "/onboarding/profile",
+    },
+    {
+      title: "Manage Subjects",
+      description: "Update the subjects you want to study.",
+      icon: "▣",
+      href: "/onboarding/subjects",
+    },
+    {
+      title: "Update Goals",
+      description: "Adjust your current study objectives.",
+      icon: "◎",
+      href: "/onboarding/goals",
+    },
+  ];
+
   return (
     <main className="min-h-screen">
       <Navbar />
@@ -73,6 +102,7 @@ export default function Dashboard() {
       <section className="relative mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16">
         {/* Background glow */}
         <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-violet-600/10 blur-[120px]" />
+
         <div className="pointer-events-none absolute -right-40 top-40 h-80 w-80 rounded-full bg-cyan-500/10 blur-[120px]" />
 
         {/* Welcome */}
@@ -170,13 +200,67 @@ export default function Dashboard() {
                 {stat.value}
               </p>
 
-              <p className="mt-2 text-xs text-zinc-600">{stat.description}</p>
+              <p className="mt-2 text-xs text-zinc-600">
+                {stat.description}
+              </p>
             </div>
           ))}
         </div>
 
-        {/* Recommended section placeholder */}
-        <div className="relative mt-14">
+        {/* Quick Actions */}
+        <section className="relative mt-10">
+          <div className="mb-5">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
+              Quick actions
+            </p>
+
+            <h2 className="mt-2 text-2xl font-bold text-white">
+              Keep your learning moving
+            </h2>
+
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
+              Quickly manage your profile, subjects, goals, and StudyBuddy
+              discovery.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {quickActions.map((action) => (
+              <a
+                key={action.title}
+                href={action.href}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-violet-400/20 hover:bg-violet-500/[0.05]"
+              >
+                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-violet-500/10 blur-3xl transition group-hover:bg-violet-500/20" />
+
+                <div className="relative flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-violet-400/10 bg-violet-500/10 text-lg text-violet-300">
+                    {action.icon}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-semibold text-white">
+                        {action.title}
+                      </h3>
+
+                      <span className="text-zinc-600 transition group-hover:translate-x-1 group-hover:text-violet-300">
+                        →
+                      </span>
+                    </div>
+
+                    <p className="mt-2 text-sm leading-6 text-zinc-400">
+                      {action.description}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Recommended StudyBuddies */}
+        <section id="recommendations" className="relative mt-14">
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
             <div>
               <p className="text-sm font-medium text-violet-400">
@@ -197,7 +281,6 @@ export default function Dashboard() {
             </button>
           </div>
 
-          {/* Temporary matching placeholders */}
           {/* Recommended StudyBuddies */}
           <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {recommendedBuddies.map((buddy) => (
@@ -216,7 +299,9 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-white">{buddy.name}</h3>
+                      <h3 className="font-bold text-white">
+                        {buddy.name}
+                      </h3>
 
                       <p className="mt-1 text-xs text-zinc-500">
                         {buddy.university}
@@ -303,8 +388,10 @@ export default function Dashboard() {
               </article>
             ))}
           </div>
-        </div>
+        </section>
       </section>
+
+      {/* Profile Modal */}
       {selectedBuddy && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
@@ -341,7 +428,9 @@ export default function Dashboard() {
             </div>
 
             <div className="mt-6 rounded-2xl border border-violet-400/10 bg-violet-500/5 p-5">
-              <p className="text-sm text-zinc-400">Study compatibility</p>
+              <p className="text-sm text-zinc-400">
+                Study compatibility
+              </p>
 
               <div className="mt-2 flex items-end gap-2">
                 <span className="text-4xl font-extrabold text-white">
@@ -373,7 +462,9 @@ export default function Dashboard() {
 
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs text-zinc-500">Study style</p>
+                <p className="text-xs text-zinc-500">
+                  Study style
+                </p>
 
                 <p className="mt-1 font-semibold text-white">
                   {selectedBuddy.studyStyle}
@@ -381,7 +472,9 @@ export default function Dashboard() {
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs text-zinc-500">Study time</p>
+                <p className="text-xs text-zinc-500">
+                  Study time
+                </p>
 
                 <p className="mt-1 font-semibold text-white">
                   {selectedBuddy.studyTime}
