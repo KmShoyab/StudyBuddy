@@ -1,3 +1,33 @@
+const recommendedBuddies = [
+  {
+    name: "Abid Abdullah",
+    university: "CSE Student",
+    compatibility: 94,
+    subjects: ["Python", "Algorithms", "Database"],
+    studyStyle: "Focused",
+    studyTime: "Evening",
+    initials: "AR",
+  },
+  {
+    name: "Imzamamul haque",
+    university: "Software Engineering",
+    compatibility: 89,
+    subjects: ["Web Development", "JavaScript", "UI/UX"],
+    studyStyle: "Balanced",
+    studyTime: "Night",
+    initials: "NJ",
+  },
+  {
+    name: "Jihad Mia",
+    university: "Computer Science",
+    compatibility: 86,
+    subjects: ["Machine Learning", "Python", "Statistics"],
+    studyStyle: "Discussion",
+    studyTime: "Afternoon",
+    initials: "FA",
+  },
+];
+
 import Navbar from "@/components/Navbar";
 
 const stats = [
@@ -153,22 +183,100 @@ export default function Dashboard() {
           </div>
 
           {/* Temporary matching placeholders */}
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"
-              >
-                <div className="h-12 w-12 animate-pulse rounded-full bg-white/10" />
+          {/* Recommended StudyBuddies */}
+<div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+  {recommendedBuddies.map((buddy) => (
+    <article
+      key={buddy.name}
+      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-6 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.04]"
+    >
+      {/* Card glow */}
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-violet-500/10 blur-3xl transition duration-500 group-hover:bg-violet-500/20" />
 
-                <div className="mt-5 h-4 w-32 animate-pulse rounded bg-white/10" />
-
-                <div className="mt-3 h-3 w-full animate-pulse rounded bg-white/5" />
-
-                <div className="mt-2 h-3 w-3/4 animate-pulse rounded bg-white/5" />
-              </div>
-            ))}
+      {/* Profile */}
+      <div className="relative flex items-start justify-between">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-violet-200 ring-1 ring-white/10">
+            {buddy.initials}
           </div>
+
+          <div>
+            <h3 className="font-bold text-white">
+              {buddy.name}
+            </h3>
+
+            <p className="mt-1 text-xs text-zinc-500">
+              {buddy.university}
+            </p>
+          </div>
+        </div>
+
+        {/* Compatibility */}
+        <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1.5 text-right">
+          <p className="text-sm font-bold text-emerald-300">
+            {buddy.compatibility}%
+          </p>
+
+          <p className="text-[9px] uppercase tracking-wider text-emerald-400/70">
+            Match
+          </p>
+        </div>
+      </div>
+
+      {/* Subjects */}
+      <div className="relative mt-6">
+        <p className="text-xs font-medium uppercase tracking-wider text-zinc-600">
+          Common interests
+        </p>
+
+        <div className="mt-3 flex flex-wrap gap-2">
+          {buddy.subjects.map((subject) => (
+            <span
+              key={subject}
+              className="rounded-lg border border-white/8 bg-white/[0.04] px-2.5 py-1.5 text-xs text-zinc-400"
+            >
+              {subject}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Study preferences */}
+      <div className="relative mt-6 grid grid-cols-2 gap-3">
+        <div className="rounded-xl border border-white/8 bg-black/10 p-3">
+          <p className="text-[10px] uppercase tracking-wider text-zinc-600">
+            Study style
+          </p>
+
+          <p className="mt-1 text-xs font-medium text-zinc-300">
+            {buddy.studyStyle}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-white/8 bg-black/10 p-3">
+          <p className="text-[10px] uppercase tracking-wider text-zinc-600">
+            Study time
+          </p>
+
+          <p className="mt-1 text-xs font-medium text-zinc-300">
+            {buddy.studyTime}
+          </p>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="relative mt-6 flex gap-3">
+        <button className="flex-1 rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400">
+          Connect
+        </button>
+
+        <button className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-zinc-300 transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white">
+          Profile
+        </button>
+      </div>
+    </article>
+  ))}
+</div>
         </div>
       </section>
     </main>
