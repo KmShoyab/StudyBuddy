@@ -1,3 +1,5 @@
+"use client";
+
 const recommendedBuddies = [
   {
     name: "Abid Abdullah",
@@ -6,7 +8,7 @@ const recommendedBuddies = [
     subjects: ["Python", "Algorithms", "Database"],
     studyStyle: "Focused",
     studyTime: "Evening",
-    initials: "AR",
+    initials: "AA",
   },
   {
     name: "Imzamamul haque",
@@ -15,7 +17,7 @@ const recommendedBuddies = [
     subjects: ["Web Development", "JavaScript", "UI/UX"],
     studyStyle: "Balanced",
     studyTime: "Night",
-    initials: "NJ",
+    initials: "IH",
   },
   {
     name: "Jihad Mia",
@@ -24,10 +26,11 @@ const recommendedBuddies = [
     subjects: ["Machine Learning", "Python", "Statistics"],
     studyStyle: "Discussion",
     studyTime: "Afternoon",
-    initials: "FA",
+    initials: "JM",
   },
 ];
 
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 
 const stats = [
@@ -49,6 +52,17 @@ const stats = [
 ];
 
 export default function Dashboard() {
+  const [connectionRequests, setConnectionRequests] = useState<string[]>([]);
+
+  const handleConnect = (name: string) => {
+    setConnectionRequests((current) => {
+      if (current.includes(name)) {
+        return current;
+      }
+
+      return [...current, name];
+    });
+  };
   return (
     <main className="min-h-screen">
       <Navbar />
@@ -69,8 +83,8 @@ export default function Dashboard() {
           </h1>
 
           <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400 sm:text-base">
-            Your profile is ready. Now let&apos;s find people who match the
-            way you study, learn, and grow.
+            Your profile is ready. Now let&apos;s find people who match the way
+            you study, learn, and grow.
           </p>
         </div>
 
@@ -153,9 +167,7 @@ export default function Dashboard() {
                 {stat.value}
               </p>
 
-              <p className="mt-2 text-xs text-zinc-600">
-                {stat.description}
-              </p>
+              <p className="mt-2 text-xs text-zinc-600">{stat.description}</p>
             </div>
           ))}
         </div>
@@ -184,99 +196,107 @@ export default function Dashboard() {
 
           {/* Temporary matching placeholders */}
           {/* Recommended StudyBuddies */}
-<div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-  {recommendedBuddies.map((buddy) => (
-    <article
-      key={buddy.name}
-      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-6 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.04]"
-    >
-      {/* Card glow */}
-      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-violet-500/10 blur-3xl transition duration-500 group-hover:bg-violet-500/20" />
+          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {recommendedBuddies.map((buddy) => (
+              <article
+                key={buddy.name}
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-6 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.04]"
+              >
+                {/* Card glow */}
+                <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-violet-500/10 blur-3xl transition duration-500 group-hover:bg-violet-500/20" />
 
-      {/* Profile */}
-      <div className="relative flex items-start justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-violet-200 ring-1 ring-white/10">
-            {buddy.initials}
+                {/* Profile */}
+                <div className="relative flex items-start justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-violet-200 ring-1 ring-white/10">
+                      {buddy.initials}
+                    </div>
+
+                    <div>
+                      <h3 className="font-bold text-white">{buddy.name}</h3>
+
+                      <p className="mt-1 text-xs text-zinc-500">
+                        {buddy.university}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Compatibility */}
+                  <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1.5 text-right">
+                    <p className="text-sm font-bold text-emerald-300">
+                      {buddy.compatibility}%
+                    </p>
+
+                    <p className="text-[9px] uppercase tracking-wider text-emerald-400/70">
+                      Match
+                    </p>
+                  </div>
+                </div>
+
+                {/* Subjects */}
+                <div className="relative mt-6">
+                  <p className="text-xs font-medium uppercase tracking-wider text-zinc-600">
+                    Common interests
+                  </p>
+
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {buddy.subjects.map((subject) => (
+                      <span
+                        key={subject}
+                        className="rounded-lg border border-white/8 bg-white/[0.04] px-2.5 py-1.5 text-xs text-zinc-400"
+                      >
+                        {subject}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Study preferences */}
+                <div className="relative mt-6 grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-white/8 bg-black/10 p-3">
+                    <p className="text-[10px] uppercase tracking-wider text-zinc-600">
+                      Study style
+                    </p>
+
+                    <p className="mt-1 text-xs font-medium text-zinc-300">
+                      {buddy.studyStyle}
+                    </p>
+                  </div>
+
+                  <div className="rounded-xl border border-white/8 bg-black/10 p-3">
+                    <p className="text-[10px] uppercase tracking-wider text-zinc-600">
+                      Study time
+                    </p>
+
+                    <p className="mt-1 text-xs font-medium text-zinc-300">
+                      {buddy.studyTime}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="relative mt-6 flex gap-3">
+                  <button
+                    onClick={() => handleConnect(buddy.name)}
+                    disabled={connectionRequests.includes(buddy.name)}
+                    className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
+                      connectionRequests.includes(buddy.name)
+                        ? "cursor-default border border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+                        : "bg-violet-500 text-white hover:bg-violet-400"
+                    }`}
+                  >
+                    {connectionRequests.includes(buddy.name)
+                      ? "Request Sent ✓"
+                      : "Connect"}
+                  </button>
+
+                  <button className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-zinc-300 transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white">
+                    Profile
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
-
-          <div>
-            <h3 className="font-bold text-white">
-              {buddy.name}
-            </h3>
-
-            <p className="mt-1 text-xs text-zinc-500">
-              {buddy.university}
-            </p>
-          </div>
-        </div>
-
-        {/* Compatibility */}
-        <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1.5 text-right">
-          <p className="text-sm font-bold text-emerald-300">
-            {buddy.compatibility}%
-          </p>
-
-          <p className="text-[9px] uppercase tracking-wider text-emerald-400/70">
-            Match
-          </p>
-        </div>
-      </div>
-
-      {/* Subjects */}
-      <div className="relative mt-6">
-        <p className="text-xs font-medium uppercase tracking-wider text-zinc-600">
-          Common interests
-        </p>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          {buddy.subjects.map((subject) => (
-            <span
-              key={subject}
-              className="rounded-lg border border-white/8 bg-white/[0.04] px-2.5 py-1.5 text-xs text-zinc-400"
-            >
-              {subject}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Study preferences */}
-      <div className="relative mt-6 grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-white/8 bg-black/10 p-3">
-          <p className="text-[10px] uppercase tracking-wider text-zinc-600">
-            Study style
-          </p>
-
-          <p className="mt-1 text-xs font-medium text-zinc-300">
-            {buddy.studyStyle}
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-white/8 bg-black/10 p-3">
-          <p className="text-[10px] uppercase tracking-wider text-zinc-600">
-            Study time
-          </p>
-
-          <p className="mt-1 text-xs font-medium text-zinc-300">
-            {buddy.studyTime}
-          </p>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="relative mt-6 flex gap-3">
-        <button className="flex-1 rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400">
-          Connect
-        </button>
-
-        <button className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm font-semibold text-zinc-300 transition hover:border-white/20 hover:bg-white/[0.08] hover:text-white">
-          Profile
-        </button>
-      </div>
-    </article>
-  ))}
-</div>
         </div>
       </section>
     </main>
