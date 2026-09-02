@@ -51,9 +51,66 @@ const stats = [
   },
 ];
 
+const quickActions = [
+  {
+    title: "Find StudyBuddies",
+    description: "Discover students who match your learning style.",
+    icon: "⌕",
+    href: "#recommendations",
+  },
+  {
+    title: "Edit Profile",
+    description: "Keep your academic profile up to date.",
+    icon: "✦",
+    href: "/onboarding/profile",
+  },
+  {
+    title: "Manage Subjects",
+    description: "Update the subjects you want to study.",
+    icon: "▣",
+    href: "/onboarding/subjects",
+  },
+  {
+    title: "Update Goals",
+    description: "Adjust your current study objectives.",
+    icon: "◎",
+    href: "/onboarding/goals",
+  },
+];
+
+const recentActivities = [
+  {
+    title: "Profile completed",
+    description: "Your learning profile is ready for matching.",
+    time: "Just now",
+    icon: "✓",
+    type: "success",
+  },
+  {
+    title: "Subjects added",
+    description: "You selected 6 subjects for your study profile.",
+    time: "Today",
+    icon: "▣",
+    type: "subject",
+  },
+  {
+    title: "Study goals updated",
+    description: "Your current learning goals are now active.",
+    time: "Today",
+    icon: "◎",
+    type: "goal",
+  },
+  {
+    title: "Matching system activated",
+    description: "StudyBuddy recommendations are ready for you.",
+    time: "Today",
+    icon: "✦",
+    type: "match",
+  },
+];
+
 export default function Dashboard() {
   const [connectionRequests, setConnectionRequests] = useState<string[]>([]);
-
   const [selectedBuddy, setSelectedBuddy] = useState<
     (typeof recommendedBuddies)[number] | null
   >(null);
@@ -68,33 +125,6 @@ export default function Dashboard() {
     });
   };
 
-  const quickActions = [
-    {
-      title: "Find StudyBuddies",
-      description: "Discover students who match your learning style.",
-      icon: "⌕",
-      href: "#recommendations",
-    },
-    {
-      title: "Edit Profile",
-      description: "Keep your academic profile up to date.",
-      icon: "✦",
-      href: "/onboarding/profile",
-    },
-    {
-      title: "Manage Subjects",
-      description: "Update the subjects you want to study.",
-      icon: "▣",
-      href: "/onboarding/subjects",
-    },
-    {
-      title: "Update Goals",
-      description: "Adjust your current study objectives.",
-      icon: "◎",
-      href: "/onboarding/goals",
-    },
-  ];
-
   return (
     <main className="min-h-screen">
       <Navbar />
@@ -102,7 +132,6 @@ export default function Dashboard() {
       <section className="relative mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16">
         {/* Background glow */}
         <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-violet-600/10 blur-[120px]" />
-
         <div className="pointer-events-none absolute -right-40 top-40 h-80 w-80 rounded-full bg-cyan-500/10 blur-[120px]" />
 
         {/* Welcome */}
@@ -181,9 +210,12 @@ export default function Dashboard() {
               system.
             </p>
 
-            <button className="mt-6 rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-400/30 hover:bg-violet-500/10">
+            <a
+              href="/onboarding/profile"
+              className="mt-6 inline-flex rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-400/30 hover:bg-violet-500/10"
+            >
               Edit profile
-            </button>
+            </a>
           </div>
         </div>
 
@@ -209,53 +241,112 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <section className="relative mt-10">
-          <div className="mb-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-violet-300">
-              Quick actions
+          <div>
+            <p className="text-sm font-medium text-violet-400">
+              Quick access
             </p>
 
-            <h2 className="mt-2 text-2xl font-bold text-white">
-              Keep your learning moving
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+              Keep learning moving
             </h2>
 
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
-              Quickly manage your profile, subjects, goals, and StudyBuddy
-              discovery.
+            <p className="mt-2 text-sm text-zinc-500">
+              Jump directly to the things you use most.
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {quickActions.map((action) => (
               <a
                 key={action.title}
                 href={action.href}
-                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition duration-300 hover:-translate-y-1 hover:border-violet-400/20 hover:bg-violet-500/[0.05]"
+                className="group rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.04]"
               >
-                <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-violet-500/10 blur-3xl transition group-hover:bg-violet-500/20" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/10 bg-violet-500/10 text-lg text-violet-300 transition group-hover:bg-violet-500/20">
+                  {action.icon}
+                </div>
 
-                <div className="relative flex items-start gap-4">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-violet-400/10 bg-violet-500/10 text-lg text-violet-300">
-                    {action.icon}
+                <h3 className="mt-4 text-sm font-bold text-white">
+                  {action.title}
+                </h3>
+
+                <p className="mt-2 text-xs leading-5 text-zinc-500">
+                  {action.description}
+                </p>
+
+                <span className="mt-4 inline-block text-xs font-semibold text-violet-400 transition group-hover:translate-x-1">
+                  Open →
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* Recent Activity */}
+        <section className="relative mt-14">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-sm font-medium text-violet-400">
+                Your progress
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                Recent Activity
+              </h2>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                A quick look at what has been happening in your learning space.
+              </p>
+            </div>
+
+            <span className="text-xs text-zinc-600">
+              Activity timeline
+            </span>
+          </div>
+
+          <div className="relative mt-6 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025]">
+            <div className="divide-y divide-white/5">
+              {recentActivities.map((activity) => (
+                <div
+                  key={activity.title}
+                  className="group flex items-start gap-4 p-5 transition hover:bg-white/[0.025] sm:p-6"
+                >
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-sm font-bold ${
+                      activity.type === "success"
+                        ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+                        : activity.type === "subject"
+                          ? "border-blue-400/20 bg-blue-400/10 text-blue-300"
+                          : activity.type === "goal"
+                            ? "border-cyan-400/20 bg-cyan-400/10 text-cyan-300"
+                            : "border-violet-400/20 bg-violet-400/10 text-violet-300"
+                    }`}
+                  >
+                    {activity.icon}
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center justify-between gap-3">
-                      <h3 className="font-semibold text-white">
-                        {action.title}
+                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
+                      <h3 className="text-sm font-semibold text-white">
+                        {activity.title}
                       </h3>
 
-                      <span className="text-zinc-600 transition group-hover:translate-x-1 group-hover:text-violet-300">
-                        →
+                      <span className="text-[11px] text-zinc-600">
+                        {activity.time}
                       </span>
                     </div>
 
-                    <p className="mt-2 text-sm leading-6 text-zinc-400">
-                      {action.description}
+                    <p className="mt-1 text-xs leading-5 text-zinc-500">
+                      {activity.description}
                     </p>
                   </div>
+
+                  <span className="hidden text-zinc-700 transition group-hover:text-violet-400 sm:block">
+                    →
+                  </span>
                 </div>
-              </a>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
@@ -281,7 +372,7 @@ export default function Dashboard() {
             </button>
           </div>
 
-          {/* Recommended StudyBuddies */}
+          {/* StudyBuddy cards */}
           <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {recommendedBuddies.map((buddy) => (
               <article
@@ -299,9 +390,7 @@ export default function Dashboard() {
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-white">
-                        {buddy.name}
-                      </h3>
+                      <h3 className="font-bold text-white">{buddy.name}</h3>
 
                       <p className="mt-1 text-xs text-zinc-500">
                         {buddy.university}
@@ -391,7 +480,7 @@ export default function Dashboard() {
         </section>
       </section>
 
-      {/* Profile Modal */}
+      {/* Profile modal */}
       {selectedBuddy && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
@@ -401,6 +490,7 @@ export default function Dashboard() {
             className="w-full max-w-lg rounded-3xl border border-white/10 bg-[#0b0d14] p-6 shadow-2xl shadow-violet-950/40"
             onClick={(event) => event.stopPropagation()}
           >
+            {/* Modal header */}
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-white ring-1 ring-white/10">
@@ -427,6 +517,7 @@ export default function Dashboard() {
               </button>
             </div>
 
+            {/* Compatibility */}
             <div className="mt-6 rounded-2xl border border-violet-400/10 bg-violet-500/5 p-5">
               <p className="text-sm text-zinc-400">
                 Study compatibility
@@ -443,6 +534,7 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Subjects */}
             <div className="mt-5">
               <p className="text-sm font-semibold text-zinc-300">
                 Common subjects
@@ -460,11 +552,10 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Preferences */}
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs text-zinc-500">
-                  Study style
-                </p>
+                <p className="text-xs text-zinc-500">Study style</p>
 
                 <p className="mt-1 font-semibold text-white">
                   {selectedBuddy.studyStyle}
@@ -472,9 +563,7 @@ export default function Dashboard() {
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs text-zinc-500">
-                  Study time
-                </p>
+                <p className="text-xs text-zinc-500">Study time</p>
 
                 <p className="mt-1 font-semibold text-white">
                   {selectedBuddy.studyTime}
@@ -482,6 +571,7 @@ export default function Dashboard() {
               </div>
             </div>
 
+            {/* Modal actions */}
             <div className="mt-6 flex gap-3">
               <button
                 onClick={() => {
