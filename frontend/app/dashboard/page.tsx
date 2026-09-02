@@ -1,0 +1,176 @@
+import Navbar from "@/components/Navbar";
+
+const stats = [
+  {
+    label: "Profile strength",
+    value: "92%",
+    description: "Almost fully optimized",
+  },
+  {
+    label: "Study goals",
+    value: "3",
+    description: "Active learning goals",
+  },
+  {
+    label: "Subjects",
+    value: "6",
+    description: "Selected subjects",
+  },
+];
+
+export default function Dashboard() {
+  return (
+    <main className="min-h-screen">
+      <Navbar />
+
+      <section className="relative mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16">
+        {/* Background glow */}
+        <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-violet-600/10 blur-[120px]" />
+        <div className="pointer-events-none absolute -right-40 top-40 h-80 w-80 rounded-full bg-cyan-500/10 blur-[120px]" />
+
+        {/* Welcome */}
+        <div className="relative">
+          <p className="text-sm font-medium text-violet-400">
+            Your learning space
+          </p>
+
+          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
+            Good evening, Shoyab.
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400 sm:text-base">
+            Your profile is ready. Now let&apos;s find people who match the
+            way you study, learn, and grow.
+          </p>
+        </div>
+
+        {/* Profile overview */}
+        <div className="relative mt-10 grid gap-5 md:grid-cols-[1.4fr_1fr]">
+          {/* Compatibility card */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 backdrop-blur-xl">
+            <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl" />
+
+            <div className="relative flex flex-col justify-between gap-8 sm:flex-row sm:items-center">
+              <div>
+                <p className="text-sm font-medium text-zinc-400">
+                  Compatibility readiness
+                </p>
+
+                <div className="mt-3 flex items-end gap-2">
+                  <span className="text-5xl font-extrabold tracking-tight text-white">
+                    92
+                  </span>
+
+                  <span className="mb-2 text-xl font-semibold text-violet-400">
+                    %
+                  </span>
+                </div>
+
+                <p className="mt-3 max-w-sm text-sm leading-6 text-zinc-500">
+                  Your profile contains enough information to start finding
+                  compatible StudyBuddies.
+                </p>
+              </div>
+
+              {/* Progress ring */}
+              <div className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full border-8 border-violet-500/20">
+                <div className="flex h-24 w-24 items-center justify-center rounded-full border border-violet-400/20 bg-violet-500/10">
+                  <span className="text-2xl font-bold text-violet-300">
+                    92%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Profile status */}
+          <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-7 backdrop-blur-xl">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-zinc-400">
+                Profile status
+              </p>
+
+              <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
+                Ready
+              </span>
+            </div>
+
+            <h2 className="mt-6 text-xl font-bold text-white">
+              You&apos;re ready to discover.
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-zinc-500">
+              Your study preferences and goals are ready to power the matching
+              system.
+            </p>
+
+            <button className="mt-6 rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-400/30 hover:bg-violet-500/10">
+              Edit profile
+            </button>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div className="relative mt-5 grid gap-5 sm:grid-cols-3">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 transition hover:-translate-y-1 hover:border-violet-400/20"
+            >
+              <p className="text-sm text-zinc-500">{stat.label}</p>
+
+              <p className="mt-2 text-3xl font-extrabold tracking-tight text-white">
+                {stat.value}
+              </p>
+
+              <p className="mt-2 text-xs text-zinc-600">
+                {stat.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Recommended section placeholder */}
+        <div className="relative mt-14">
+          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+            <div>
+              <p className="text-sm font-medium text-violet-400">
+                Intelligent matching
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                Recommended StudyBuddies
+              </h2>
+
+              <p className="mt-2 text-sm text-zinc-500">
+                People who may be a strong match for your learning style.
+              </p>
+            </div>
+
+            <button className="w-fit text-sm font-semibold text-violet-400 transition hover:text-violet-300">
+              View all →
+            </button>
+          </div>
+
+          {/* Temporary matching placeholders */}
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="rounded-3xl border border-white/10 bg-white/[0.025] p-6"
+              >
+                <div className="h-12 w-12 animate-pulse rounded-full bg-white/10" />
+
+                <div className="mt-5 h-4 w-32 animate-pulse rounded bg-white/10" />
+
+                <div className="mt-3 h-3 w-full animate-pulse rounded bg-white/5" />
+
+                <div className="mt-2 h-3 w-3/4 animate-pulse rounded bg-white/5" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
