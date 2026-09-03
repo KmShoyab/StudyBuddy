@@ -1,4 +1,6 @@
 "use client";
+import Footer from "@/components/Footer";
+
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
@@ -599,6 +601,7 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+      <Footer />
     </main>
   );
 }
