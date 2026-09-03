@@ -1,552 +1,740 @@
 "use client";
+
 import Footer from "@/components/Footer";
-
-
-import { useState } from "react";
 import Navbar from "@/components/Navbar";
+import { useEffect, useState } from "react";
 
 const recommendedBuddies = [
   {
     name: "Abid Abdullah",
-    university: "CSE Student",
-    compatibility: 94,
-    subjects: ["Python", "Algorithms", "Database"],
-    studyStyle: "Focused",
-    studyTime: "Evening",
     initials: "AA",
+    match: 94,
+    subjects: ["Data Structures", "Algorithms", "Database"],
+    mode: "Focused",
+    availability: "Evening",
+    session: "45–60 min",
   },
   {
     name: "Imzamamul haque",
-    university: "Software Engineering",
-    compatibility: 89,
-    subjects: ["Web Development", "JavaScript", "UI/UX"],
-    studyStyle: "Balanced",
-    studyTime: "Night",
     initials: "IH",
+    match: 89,
+    subjects: ["Algorithms", "Operating Systems", "Theory of Computing"],
+    mode: "Balanced",
+    availability: "Afternoon",
+    session: "1–2 hours",
   },
   {
     name: "Jihad Mia",
-    university: "Computer Science",
-    compatibility: 86,
-    subjects: ["Machine Learning", "Python", "Statistics"],
-    studyStyle: "Discussion",
-    studyTime: "Afternoon",
     initials: "JM",
+    match: 86,
+    subjects: ["Database", "Web Development", "Software Engineering"],
+    mode: "Discussion",
+    availability: "Late night",
+    session: "45–60 min",
   },
 ];
 
 const stats = [
   {
-    label: "Profile strength",
+    label: "Study Sessions",
+    value: "12",
+    detail: "This month",
+    icon: "📚",
+  },
+  {
+    label: "Study Hours",
+    value: "18.5",
+    detail: "This month",
+    icon: "⏱️",
+  },
+  {
+    label: "Connections",
+    value: "8",
+    detail: "Total",
+    icon: "🤝",
+  },
+  {
+    label: "Match Score",
     value: "92%",
-    description: "Almost fully optimized",
-  },
-  {
-    label: "Study goals",
-    value: "3",
-    description: "Active learning goals",
-  },
-  {
-    label: "Subjects",
-    value: "6",
-    description: "Selected subjects",
+    detail: "Profile compatibility",
+    icon: "✨",
   },
 ];
 
 const quickActions = [
   {
-    title: "Find StudyBuddies",
-    description: "Discover students who match your learning style.",
-    icon: "⌕",
-    href: "#recommendations",
+    title: "Find a StudyBuddy",
+    description: "Discover students who match your study style.",
+    icon: "🔎",
   },
   {
-    title: "Edit Profile",
-    description: "Keep your academic profile up to date.",
-    icon: "✦",
-    href: "/onboarding/profile",
+    title: "Update Preferences",
+    description: "Keep your availability and study style fresh.",
+    icon: "⚙️",
   },
   {
-    title: "Manage Subjects",
-    description: "Update the subjects you want to study.",
-    icon: "▣",
-    href: "/onboarding/subjects",
-  },
-  {
-    title: "Update Goals",
-    description: "Adjust your current study objectives.",
-    icon: "◎",
-    href: "/onboarding/goals",
+    title: "View My Profile",
+    description: "See how other students discover you.",
+    icon: "👤",
   },
 ];
 
 const recentActivities = [
   {
-    title: "Profile completed",
-    description: "Your learning profile is ready for matching.",
-    time: "Just now",
-    icon: "✓",
-    type: "success",
+    title: "Connected with Abid Abdullah",
+    time: "2 hours ago",
+    icon: "🤝",
   },
   {
-    title: "Subjects added",
-    description: "You selected 6 subjects for your study profile.",
-    time: "Today",
-    icon: "▣",
-    type: "subject",
+    title: "Updated your study preferences",
+    time: "Yesterday",
+    icon: "⚙️",
   },
   {
-    title: "Study goals updated",
-    description: "Your current learning goals are now active.",
-    time: "Today",
-    icon: "◎",
-    type: "goal",
-  },
-  {
-    title: "Matching system activated",
-    description: "StudyBuddy recommendations are ready for you.",
-    time: "Today",
-    icon: "✦",
-    type: "match",
+    title: "Completed your learner profile",
+    time: "2 days ago",
+    icon: "✅",
   },
 ];
 
 export default function Dashboard() {
   const [connectionRequests, setConnectionRequests] = useState<string[]>([]);
+
   const [selectedBuddy, setSelectedBuddy] = useState<
     (typeof recommendedBuddies)[number] | null
   >(null);
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [hasRecommendations, setHasRecommendations] = useState(true);
+  const [hasActivity, setHasActivity] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleConnect = (name: string) => {
     setConnectionRequests((current) => {
       if (current.includes(name)) {
-        return current;
+        return current.filter((item) => item !== name);
       }
 
       return [...current, name];
     });
   };
 
+  const testNormalState = () => {
+    setHasRecommendations(true);
+    setHasActivity(true);
+    setHasError(false);
+  };
+
+  const testEmptyState = () => {
+    setHasRecommendations(false);
+    setHasActivity(false);
+    setHasError(false);
+  };
+
+  const testErrorState = () => {
+    setHasError(true);
+  };
+
+  const toggleActivity = () => {
+    setHasActivity((current) => !current);
+  };
+
   return (
-    <main className="min-h-screen">
+    <>
       <Navbar />
 
-      <section className="relative mx-auto max-w-7xl overflow-hidden px-6 py-12 sm:py-16">
-        {/* Background glow */}
-        <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-violet-600/10 blur-[120px]" />
-        <div className="pointer-events-none absolute -right-40 top-40 h-80 w-80 rounded-full bg-cyan-500/10 blur-[120px]" />
+      <main className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] theme-transition">
+        {isLoading ? (
+          <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+            <div className="animate-pulse space-y-8">
+              <div className="h-8 w-72 rounded-lg bg-[var(--surface-soft)]" />
 
-        {/* Welcome */}
-        <div className="relative">
-          <p className="text-sm font-medium text-violet-400">
-            Your learning space
-          </p>
-
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl md:text-5xl">
-            Good evening, Shoyab.
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-400 sm:text-base">
-            Your profile is ready. Now let&apos;s find people who match the way
-            you study, learn, and grow.
-          </p>
-        </div>
-
-        {/* Profile overview */}
-        <div className="relative mt-10 grid gap-5 md:grid-cols-[1.4fr_1fr]">
-          {/* Compatibility card */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.035] p-7 backdrop-blur-xl">
-            <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-violet-500/10 blur-3xl" />
-
-            <div className="relative flex flex-col justify-between gap-8 sm:flex-row sm:items-center">
-              <div>
-                <p className="text-sm font-medium text-zinc-400">
-                  Compatibility readiness
-                </p>
-
-                <div className="mt-3 flex items-end gap-2">
-                  <span className="text-5xl font-extrabold tracking-tight text-white">
-                    92
-                  </span>
-
-                  <span className="mb-2 text-xl font-semibold text-violet-400">
-                    %
-                  </span>
-                </div>
-
-                <p className="mt-3 max-w-sm text-sm leading-6 text-zinc-500">
-                  Your profile contains enough information to start finding
-                  compatible StudyBuddies.
-                </p>
-              </div>
-
-              {/* Progress ring */}
-              <div className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full border-8 border-violet-500/20">
-                <div className="flex h-24 w-24 items-center justify-center rounded-full border border-violet-400/20 bg-violet-500/10">
-                  <span className="text-2xl font-bold text-violet-300">
-                    92%
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Profile status */}
-          <div className="rounded-3xl border border-white/10 bg-white/[0.035] p-7 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-zinc-400">
-                Profile status
-              </p>
-
-              <span className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-300">
-                Ready
-              </span>
-            </div>
-
-            <h2 className="mt-6 text-xl font-bold text-white">
-              You&apos;re ready to discover.
-            </h2>
-
-            <p className="mt-2 text-sm leading-6 text-zinc-500">
-              Your study preferences and goals are ready to power the matching
-              system.
-            </p>
-
-            <a
-              href="/onboarding/profile"
-              className="mt-6 inline-flex rounded-xl border border-white/10 bg-white/[0.05] px-4 py-2.5 text-sm font-semibold text-white transition hover:border-violet-400/30 hover:bg-violet-500/10"
-            >
-              Edit profile
-            </a>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="relative mt-5 grid gap-5 sm:grid-cols-3">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-2xl border border-white/10 bg-white/[0.025] p-6 transition hover:-translate-y-1 hover:border-violet-400/20"
-            >
-              <p className="text-sm text-zinc-500">{stat.label}</p>
-
-              <p className="mt-2 text-3xl font-extrabold tracking-tight text-white">
-                {stat.value}
-              </p>
-
-              <p className="mt-2 text-xs text-zinc-600">
-                {stat.description}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Quick Actions */}
-        <section className="relative mt-10">
-          <div>
-            <p className="text-sm font-medium text-violet-400">
-              Quick access
-            </p>
-
-            <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-              Keep learning moving
-            </h2>
-
-            <p className="mt-2 text-sm text-zinc-500">
-              Jump directly to the things you use most.
-            </p>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {quickActions.map((action) => (
-              <a
-                key={action.title}
-                href={action.href}
-                className="group rounded-2xl border border-white/10 bg-white/[0.025] p-5 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.04]"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-violet-400/10 bg-violet-500/10 text-lg text-violet-300 transition group-hover:bg-violet-500/20">
-                  {action.icon}
-                </div>
-
-                <h3 className="mt-4 text-sm font-bold text-white">
-                  {action.title}
-                </h3>
-
-                <p className="mt-2 text-xs leading-5 text-zinc-500">
-                  {action.description}
-                </p>
-
-                <span className="mt-4 inline-block text-xs font-semibold text-violet-400 transition group-hover:translate-x-1">
-                  Open →
-                </span>
-              </a>
-            ))}
-          </div>
-        </section>
-
-        {/* Recent Activity */}
-        <section className="relative mt-14">
-          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-sm font-medium text-violet-400">
-                Your progress
-              </p>
-
-              <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Recent Activity
-              </h2>
-
-              <p className="mt-2 text-sm text-zinc-500">
-                A quick look at what has been happening in your learning space.
-              </p>
-            </div>
-
-            <span className="text-xs text-zinc-600">
-              Activity timeline
-            </span>
-          </div>
-
-          <div className="relative mt-6 overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025]">
-            <div className="divide-y divide-white/5">
-              {recentActivities.map((activity) => (
-                <div
-                  key={activity.title}
-                  className="group flex items-start gap-4 p-5 transition hover:bg-white/[0.025] sm:p-6"
-                >
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {Array.from({ length: 4 }).map((_, index) => (
                   <div
-                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-sm font-bold ${
-                      activity.type === "success"
-                        ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                        : activity.type === "subject"
-                          ? "border-blue-400/20 bg-blue-400/10 text-blue-300"
-                          : activity.type === "goal"
-                            ? "border-cyan-400/20 bg-cyan-400/10 text-cyan-300"
-                            : "border-violet-400/20 bg-violet-400/10 text-violet-300"
-                    }`}
-                  >
-                    {activity.icon}
-                  </div>
+                    key={index}
+                    className="h-32 rounded-2xl border border-[var(--border)] bg-[var(--surface)]"
+                  />
+                ))}
+              </div>
 
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <h3 className="text-sm font-semibold text-white">
-                        {activity.title}
-                      </h3>
+              <div className="grid gap-6 lg:grid-cols-3">
+                {Array.from({ length: 3 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-56 rounded-2xl border border-[var(--border)] bg-[var(--surface)]"
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : (
+          <>
+            {/* Welcome Section */}
+            <section className="border-b border-[var(--border)]">
+              <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p className="mb-2 text-sm font-medium text-violet-500">
+                      Welcome back 👋
+                    </p>
 
-                      <span className="text-[11px] text-zinc-600">
-                        {activity.time}
-                      </span>
-                    </div>
+                    <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                      Your learning space.
+                    </h1>
 
-                    <p className="mt-1 text-xs leading-5 text-zinc-500">
-                      {activity.description}
+                    <p className="mt-3 max-w-2xl text-[var(--text-secondary)]">
+                      Find the right people, build meaningful study connections,
+                      and make every study session count.
                     </p>
                   </div>
 
-                  <span className="hidden text-zinc-700 transition group-hover:text-violet-400 sm:block">
-                    →
-                  </span>
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-violet-500/10 text-2xl ring-1 ring-violet-500/20">
+                    🎓
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
+              </div>
+            </section>
 
-        {/* Recommended StudyBuddies */}
-        <section id="recommendations" className="relative mt-14">
-          <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
-            <div>
-              <p className="text-sm font-medium text-violet-400">
-                Intelligent matching
-              </p>
-
-              <h2 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Recommended StudyBuddies
-              </h2>
-
-              <p className="mt-2 text-sm text-zinc-500">
-                People who may be a strong match for your learning style.
-              </p>
-            </div>
-
-            <button className="w-fit text-sm font-semibold text-violet-400 transition hover:text-violet-300">
-              View all →
-            </button>
-          </div>
-
-          {/* StudyBuddy cards */}
-          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {recommendedBuddies.map((buddy) => (
-              <article
-                key={buddy.name}
-                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.025] p-6 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30 hover:bg-white/[0.04]"
-              >
-                {/* Card glow */}
-                <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-violet-500/10 blur-3xl transition duration-500 group-hover:bg-violet-500/20" />
-
-                {/* Profile */}
-                <div className="relative flex items-start justify-between">
+            {/* Main Content */}
+            <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+              {/* Profile Overview */}
+              <div className="mb-8 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm theme-transition">
+                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-violet-200 ring-1 ring-white/10">
-                      {buddy.initials}
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-cyan-400 text-lg font-bold text-white shadow-lg shadow-violet-500/20">
+                     
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-white">{buddy.name}</h3>
-
-                      <p className="mt-1 text-xs text-zinc-500">
-                        {buddy.university}
+                      <p className="text-xl font-semibold text-[var(--text-primary)]">
+                        KM Shoyabur Rahman
                       </p>
+
+                      <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                        Computer Science • 3rd Year
+                      </p>
+
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <span className="rounded-full bg-violet-500/10 px-3 py-1 text-xs font-medium text-violet-500">
+                          Focused
+                        </span>
+
+                        <span className="rounded-full bg-cyan-500/10 px-3 py-1 text-xs font-medium text-cyan-500">
+                          Evening
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Compatibility */}
-                  <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1.5 text-right">
-                    <p className="text-sm font-bold text-emerald-300">
-                      {buddy.compatibility}%
-                    </p>
-
-                    <p className="text-[9px] uppercase tracking-wider text-emerald-400/70">
-                      Match
-                    </p>
-                  </div>
+                  <button
+                    type="button"
+                    className="rounded-xl border border-[var(--border-strong)] bg-[var(--surface-soft)] px-5 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:border-violet-500/40 hover:bg-violet-500/10"
+                  >
+                    Edit Profile
+                  </button>
                 </div>
+              </div>
 
-                {/* Subjects */}
-                <div className="relative mt-6">
-                  <p className="text-xs font-medium uppercase tracking-wider text-zinc-600">
-                    Common interests
+              {/* Stats */}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                {stats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm theme-transition"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm text-[var(--text-secondary)]">
+                          {stat.label}
+                        </p>
+
+                        <p className="mt-2 text-3xl font-bold text-[var(--text-primary)]">
+                          {stat.value}
+                        </p>
+
+                        <p className="mt-1 text-xs text-[var(--text-muted)]">
+                          {stat.detail}
+                        </p>
+                      </div>
+
+                      <div className="text-xl">{stat.icon}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quick Actions */}
+              <div className="mt-10">
+                <div className="mb-5">
+                  <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                    Quick Actions
+                  </h2>
+
+                  <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                    Jump straight into what you need.
                   </p>
+                </div>
 
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {buddy.subjects.map((subject) => (
-                      <span
-                        key={subject}
-                        className="rounded-lg border border-white/8 bg-white/[0.04] px-2.5 py-1.5 text-xs text-zinc-400"
+                <div className="grid gap-4 md:grid-cols-3">
+                  {quickActions.map((action) => (
+                    <button
+                      key={action.title}
+                      type="button"
+                      className="group rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-lg hover:shadow-violet-500/5"
+                    >
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-500/10 text-xl transition group-hover:bg-violet-500/15">
+                        {action.icon}
+                      </div>
+
+                      <h3 className="mt-4 font-semibold text-[var(--text-primary)]">
+                        {action.title}
+                      </h3>
+
+                      <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">
+                        {action.description}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recommendations */}
+              <div className="mt-10">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                      Recommended StudyBuddies
+                    </h2>
+
+                    <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                      Students whose study preferences closely match yours.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="text-sm font-medium text-violet-500 hover:text-violet-400"
+                  >
+                    View all →
+                  </button>
+                </div>
+
+                <div className="mt-6">
+                  {hasError ? (
+                    <div className="rounded-2xl border border-rose-500/20 bg-rose-500/5 p-8 text-center">
+                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-500/10 text-2xl">
+                        ⚠️
+                      </div>
+
+                      <h3 className="mt-4 text-lg font-semibold text-[var(--text-primary)]">
+                        We couldn't load your recommendations
+                      </h3>
+
+                      <p className="mx-auto mt-2 max-w-md text-sm text-[var(--text-secondary)]">
+                        Something went wrong while finding StudyBuddies. Please
+                        try again.
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={testNormalState}
+                        className="mt-5 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-500"
                       >
-                        {subject}
-                      </span>
-                    ))}
+                        Try Again
+                      </button>
+                    </div>
+                  ) : !hasRecommendations ? (
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center theme-transition">
+                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-violet-500/10 text-2xl">
+                        🔎
+                      </div>
+
+                      <h3 className="mt-4 text-lg font-semibold text-[var(--text-primary)]">
+                        No StudyBuddies found yet
+                      </h3>
+
+                      <p className="mx-auto mt-2 max-w-md text-sm text-[var(--text-secondary)]">
+                        We don't have a strong match for you right now. Try
+                        updating your subjects or preferences to improve your
+                        matches.
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={testNormalState}
+                        className="mt-5 rounded-xl border border-[var(--border-strong)] bg-[var(--surface-soft)] px-5 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:border-violet-500/40 hover:bg-violet-500/10"
+                      >
+                        Update Preferences
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                      {recommendedBuddies.map((buddy) => {
+                        const isConnected = connectionRequests.includes(
+                          buddy.name,
+                        );
+
+                        return (
+                          <div
+                            key={buddy.name}
+                            className="group rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm transition hover:-translate-y-1 hover:border-violet-500/30 hover:shadow-xl hover:shadow-violet-500/5 theme-transition"
+                          >
+                            <div className="flex items-start justify-between">
+                              <button
+                                type="button"
+                                onClick={() => setSelectedBuddy(buddy)}
+                                className="flex items-center gap-3 text-left"
+                              >
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/20 to-cyan-400/20 text-sm font-bold text-violet-500 ring-1 ring-violet-500/20">
+                                  {buddy.initials}
+                                </div>
+
+                                <div>
+                                  <p className="font-semibold text-[var(--text-primary)]">
+                                    {buddy.name}
+                                  </p>
+
+                                  <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                                    StudyBuddy
+                                  </p>
+                                </div>
+                              </button>
+
+                              <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-500">
+                                {buddy.match}%
+                              </span>
+                            </div>
+
+                            <div className="mt-5">
+                              <p className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                                Subjects
+                              </p>
+
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {buddy.subjects.map((subject) => (
+                                  <span
+                                    key={subject}
+                                    className="rounded-full bg-[var(--surface-soft)] px-2.5 py-1 text-xs text-[var(--text-secondary)]"
+                                  >
+                                    {subject}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="mt-5 grid grid-cols-2 gap-3">
+                              <div className="rounded-xl bg-[var(--surface-soft)] p-3">
+                                <p className="text-xs text-[var(--text-muted)]">
+                                  Style
+                                </p>
+                                <p className="mt-1 text-sm font-medium text-[var(--text-primary)]">
+                                  {buddy.mode}
+                                </p>
+                              </div>
+
+                              <div className="rounded-xl bg-[var(--surface-soft)] p-3">
+                                <p className="text-xs text-[var(--text-muted)]">
+                                  Time
+                                </p>
+                                <p className="mt-1 text-sm font-medium text-[var(--text-primary)]">
+                                  {buddy.availability}
+                                </p>
+                              </div>
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => handleConnect(buddy.name)}
+                              className={`mt-5 w-full rounded-xl px-4 py-2.5 text-sm font-medium transition ${
+                                isConnected
+                                  ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
+                                  : "bg-violet-600 text-white hover:bg-violet-500"
+                              }`}
+                            >
+                              {isConnected ? "Request Sent ✓" : "Connect"}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Activity + Consistency */}
+              <div className="mt-10 grid gap-6 lg:grid-cols-3">
+                <div className="lg:col-span-2">
+                  <div className="mb-5">
+                    <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                      Recent Activity
+                    </h2>
+
+                    <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                      A quick look at what's happening in your StudyBuddy
+                      journey.
+                    </p>
                   </div>
+
+                  {!hasActivity ? (
+                    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-8 text-center theme-transition">
+                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-cyan-500/10 text-2xl">
+                        📝
+                      </div>
+
+                      <h3 className="mt-4 text-lg font-semibold text-[var(--text-primary)]">
+                        No recent activity
+                      </h3>
+
+                      <p className="mt-2 text-sm text-[var(--text-secondary)]">
+                        Your latest study actions will appear here.
+                      </p>
+
+                      <button
+                        type="button"
+                        onClick={toggleActivity}
+                        className="mt-5 rounded-xl border border-[var(--border-strong)] bg-[var(--surface-soft)] px-5 py-2.5 text-sm font-medium text-[var(--text-primary)] transition hover:border-cyan-500/40 hover:bg-cyan-500/10"
+                      >
+                        Show Activity
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] theme-transition">
+                      {recentActivities.map((activity, index) => (
+                        <div
+                          key={activity.title}
+                          className={`flex items-center gap-4 p-5 ${
+                            index !== recentActivities.length - 1
+                              ? "border-b border-[var(--border)]"
+                              : ""
+                          }`}
+                        >
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--surface-soft)] text-lg">
+                            {activity.icon}
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="truncate font-medium text-[var(--text-primary)]">
+                              {activity.title}
+                            </p>
+
+                            <p className="mt-1 text-sm text-[var(--text-muted)]">
+                              {activity.time}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
-                {/* Study preferences */}
-                <div className="relative mt-6 grid grid-cols-2 gap-3">
-                  <div className="rounded-xl border border-white/8 bg-black/10 p-3">
-                    <p className="text-[10px] uppercase tracking-wider text-zinc-600">
-                      Study style
-                    </p>
+                {/* Study Consistency */}
+                <div>
+                  <div className="mb-5">
+                    <h2 className="text-xl font-semibold text-[var(--text-primary)]">
+                      Study Consistency
+                    </h2>
 
-                    <p className="mt-1 text-xs font-medium text-zinc-300">
-                      {buddy.studyStyle}
+                    <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                      Keep building your learning habit.
                     </p>
                   </div>
 
-                  <div className="rounded-xl border border-white/8 bg-black/10 p-3">
-                    <p className="text-[10px] uppercase tracking-wider text-zinc-600">
-                      Study time
-                    </p>
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 theme-transition">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-[var(--text-secondary)]">
+                          Current streak
+                        </p>
 
-                    <p className="mt-1 text-xs font-medium text-zinc-300">
-                      {buddy.studyTime}
+                        <p className="mt-2 text-4xl font-bold text-[var(--text-primary)]">
+                          5
+                        </p>
+
+                        <p className="mt-1 text-sm text-[var(--text-muted)]">
+                          days
+                        </p>
+                      </div>
+
+                      <div className="text-4xl">🔥</div>
+                    </div>
+
+                    <div className="mt-6">
+                      <div className="mb-2 flex justify-between text-xs">
+                        <span className="text-[var(--text-muted)]">
+                          Weekly goal
+                        </span>
+
+                        <span className="font-medium text-[var(--text-primary)]">
+                          4 / 5 sessions
+                        </span>
+                      </div>
+
+                      <div className="h-2 overflow-hidden rounded-full bg-[var(--surface-soft)]">
+                        <div className="h-full w-4/5 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400" />
+                      </div>
+                    </div>
+
+                    <p className="mt-5 text-sm leading-6 text-[var(--text-secondary)]">
+                      One more focused session this week and you'll hit your
+                      goal.
                     </p>
                   </div>
                 </div>
+              </div>
 
-                {/* Actions */}
-                <div className="relative mt-6 flex gap-3">
-                  <button
-                    onClick={() => handleConnect(buddy.name)}
-                    disabled={connectionRequests.includes(buddy.name)}
-                    className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
-                      connectionRequests.includes(buddy.name)
-                        ? "cursor-default border border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                        : "bg-violet-500 text-white hover:bg-violet-400"
-                    }`}
-                  >
-                    {connectionRequests.includes(buddy.name)
-                      ? "Request Sent ✓"
-                      : "Connect"}
-                  </button>
+              {/* Temporary Developer Testing Controls */}
+              <div className="mt-12 rounded-2xl border border-amber-500/20 bg-amber-500/5 p-5">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-amber-500">
+                      Developer Testing Controls
+                    </p>
 
-                  <button
-                    onClick={() => setSelectedBuddy(buddy)}
-                    className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-zinc-200 transition hover:border-violet-400/30 hover:bg-violet-500/10 hover:text-white"
-                  >
-                    Profile
-                  </button>
+                    <p className="mt-1 text-xs text-[var(--text-secondary)]">
+                      Temporary controls for testing dashboard states. Remove
+                      this section before production.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={testNormalState}
+                      className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] transition hover:border-emerald-500/40 hover:bg-emerald-500/10"
+                    >
+                      Normal State
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={testEmptyState}
+                      className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] transition hover:border-violet-500/40 hover:bg-violet-500/10"
+                    >
+                      Test Empty State
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={testErrorState}
+                      className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] transition hover:border-rose-500/40 hover:bg-rose-500/10"
+                    >
+                      Test Error State
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={toggleActivity}
+                      className="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] transition hover:border-cyan-500/40 hover:bg-cyan-500/10"
+                    >
+                      Toggle Activity
+                    </button>
+                  </div>
                 </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </section>
+              </div>
+            </section>
+          </>
+        )}
+      </main>
 
-      {/* Profile modal */}
+      {/* Buddy Profile Modal */}
       {selectedBuddy && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm"
           onClick={() => setSelectedBuddy(null)}
         >
           <div
-            className="w-full max-w-lg rounded-3xl border border-white/10 bg-[#0b0d14] p-6 shadow-2xl shadow-violet-950/40"
+            className="w-full max-w-lg rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl theme-transition"
             onClick={(event) => event.stopPropagation()}
           >
-            {/* Modal header */}
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/30 to-cyan-400/20 text-lg font-bold text-white ring-1 ring-white/10">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/20 to-cyan-400/20 font-bold text-violet-500 ring-1 ring-violet-500/20">
                   {selectedBuddy.initials}
                 </div>
 
                 <div>
-                  <h2 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-semibold text-[var(--text-primary)]">
                     {selectedBuddy.name}
-                  </h2>
+                  </h3>
 
-                  <p className="mt-1 text-sm text-zinc-400">
-                    {selectedBuddy.university}
+                  <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                    {selectedBuddy.match}% compatibility
                   </p>
                 </div>
               </div>
 
               <button
+                type="button"
                 onClick={() => setSelectedBuddy(null)}
-                className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-zinc-400 transition hover:bg-white/10 hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--surface-soft)] text-[var(--text-secondary)] transition hover:bg-rose-500/10 hover:text-rose-500"
                 aria-label="Close profile"
               >
-                ×
+                ✕
               </button>
             </div>
 
-            {/* Compatibility */}
-            <div className="mt-6 rounded-2xl border border-violet-400/10 bg-violet-500/5 p-5">
-              <p className="text-sm text-zinc-400">
-                Study compatibility
-              </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
+                <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                  Study Mode
+                </p>
 
-              <div className="mt-2 flex items-end gap-2">
-                <span className="text-4xl font-extrabold text-white">
-                  {selectedBuddy.compatibility}%
-                </span>
+                <p className="mt-2 font-medium text-[var(--text-primary)]">
+                  {selectedBuddy.mode}
+                </p>
+              </div>
 
-                <span className="mb-1 text-sm text-emerald-300">
-                  Strong match
-                </span>
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
+                <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                  Availability
+                </p>
+
+                <p className="mt-2 font-medium text-[var(--text-primary)]">
+                  {selectedBuddy.availability}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
+                <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                  Session Length
+                </p>
+
+                <p className="mt-2 font-medium text-[var(--text-primary)]">
+                  {selectedBuddy.session}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface-soft)] p-4">
+                <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                  Match
+                </p>
+
+                <p className="mt-2 font-medium text-emerald-500">
+                  {selectedBuddy.match}%
+                </p>
               </div>
             </div>
 
-            {/* Subjects */}
-            <div className="mt-5">
-              <p className="text-sm font-semibold text-zinc-300">
-                Common subjects
+            <div className="mt-6">
+              <p className="text-xs uppercase tracking-wider text-[var(--text-muted)]">
+                Subjects
               </p>
 
               <div className="mt-3 flex flex-wrap gap-2">
                 {selectedBuddy.subjects.map((subject) => (
                   <span
                     key={subject}
-                    className="rounded-full border border-violet-400/10 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-200"
+                    className="rounded-full bg-violet-500/10 px-3 py-1.5 text-sm text-violet-500"
                   >
                     {subject}
                   </span>
@@ -554,54 +742,27 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Preferences */}
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs text-zinc-500">Study style</p>
-
-                <p className="mt-1 font-semibold text-white">
-                  {selectedBuddy.studyStyle}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs text-zinc-500">Study time</p>
-
-                <p className="mt-1 font-semibold text-white">
-                  {selectedBuddy.studyTime}
-                </p>
-              </div>
-            </div>
-
-            {/* Modal actions */}
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => {
-                  handleConnect(selectedBuddy.name);
-                }}
-                disabled={connectionRequests.includes(selectedBuddy.name)}
-                className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold transition ${
-                  connectionRequests.includes(selectedBuddy.name)
-                    ? "border border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                    : "bg-violet-500 text-white hover:bg-violet-400"
-                }`}
-              >
-                {connectionRequests.includes(selectedBuddy.name)
-                  ? "Request Sent ✓"
-                  : "Connect"}
-              </button>
-
-              <button
-                onClick={() => setSelectedBuddy(null)}
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/10 hover:text-white"
-              >
-                Close
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                handleConnect(selectedBuddy.name);
+                setSelectedBuddy(null);
+              }}
+              className={`mt-7 w-full rounded-xl px-4 py-3 text-sm font-medium transition ${
+                connectionRequests.includes(selectedBuddy.name)
+                  ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-500"
+                  : "bg-violet-600 text-white hover:bg-violet-500"
+              }`}
+            >
+              {connectionRequests.includes(selectedBuddy.name)
+                ? "Request Sent ✓"
+                : "Connect with StudyBuddy"}
+            </button>
           </div>
         </div>
       )}
+
       <Footer />
-    </main>
+    </>
   );
 }

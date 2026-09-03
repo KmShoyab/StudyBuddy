@@ -22,26 +22,33 @@ export default function ThemeToggle() {
   useEffect(() => {
     const root = document.documentElement;
 
-    if (theme === "dark") {
-      root.classList.add("dark");
-      root.classList.remove("light");
-    }
+    const applyTheme = (selectedTheme: Theme) => {
+      const isDark =
+        selectedTheme === "dark" ||
+        (selectedTheme === "system" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
 
-    if (theme === "light") {
-      root.classList.add("light");
-      root.classList.remove("dark");
-    }
+      root.classList.toggle("dark", isDark);
+      root.classList.toggle("light", !isDark);
+    };
 
-    if (theme === "system") {
-      const prefersDark = window.matchMedia(
-        "(prefers-color-scheme: dark)"
-      ).matches;
-
-      root.classList.toggle("dark", prefersDark);
-      root.classList.toggle("light", !prefersDark);
-    }
+    applyTheme(theme);
 
     localStorage.setItem("studybuddy-theme", theme);
+
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+
+      const handleChange = () => applyTheme("system");
+
+      mediaQuery.addEventListener("change", handleChange);
+
+      return () => {
+        mediaQuery.removeEventListener("change", handleChange);
+      };
+    }
   }, [theme]);
 
   return (
