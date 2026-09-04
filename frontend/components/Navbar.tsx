@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
@@ -23,7 +23,7 @@ const navigation = [
     href: "/profile",
   },
   {
-    label: "Notifications",
+    name: "Notifications",
     href: "/notifications",
   },
 ];
@@ -73,8 +73,21 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Desktop Theme */}
-        <div className="hidden md:block">
+        {/* Desktop Actions */}
+        <div className="hidden items-center gap-2 md:flex">
+          {/* Notification Bell */}
+          <Link
+            href="/notifications"
+            aria-label="Notifications"
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-lg text-[var(--text-secondary)] transition hover:bg-[var(--surface-soft)] hover:text-[var(--text-primary)]"
+          >
+            🔔
+            <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-violet-500 px-1 text-[10px] font-bold text-white">
+              2
+            </span>
+          </Link>
+
+          {/* Theme Toggle */}
           <ThemeToggle />
         </div>
 
@@ -113,6 +126,7 @@ export default function Navbar() {
               );
             })}
 
+            {/* Mobile Theme Toggle */}
             <div className="mt-2 border-t border-[var(--border)] pt-4">
               <ThemeToggle />
             </div>
