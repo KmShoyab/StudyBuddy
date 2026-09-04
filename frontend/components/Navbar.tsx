@@ -6,26 +6,12 @@ import { useState } from "react";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const navigation = [
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-  },
-  {
-    name: "Find StudyBuddy",
-    href: "/find",
-  },
-  {
-    name: "Connections",
-    href: "/connections",
-  },
-  {
-    name: "Profile",
-    href: "/profile",
-  },
-  {
-    name: "Notifications",
-    href: "/notifications",
-  },
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Find StudyBuddy", href: "/find" },
+  { name: "Connections", href: "/connections" },
+  { name: "Messages", href: "/messages" },
+  { name: "Profile", href: "/profile" },
+  { name: "Notifications", href: "/notifications" },
 ];
 
 export default function Navbar() {
