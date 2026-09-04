@@ -22,6 +22,10 @@ const navigation = [
     name: "Profile",
     href: "/profile",
   },
+  {
+    label: "Notifications",
+    href: "/notifications",
+  },
 ];
 
 export default function Navbar() {
