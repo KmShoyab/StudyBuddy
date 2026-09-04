@@ -82,6 +82,10 @@ export default function FindStudyBuddyPage() {
   const [mode, setMode] = useState("All");
   const [session, setSession] = useState("All");
   const [time, setTime] = useState("All");
+  const [selectedBuddy, setSelectedBuddy] = useState<
+    (typeof studyBuddies)[number] | null
+  >(null);
+  const [connectionRequests, setConnectionRequests] = useState<number[]>([]);
 
   const filteredBuddies = useMemo(() => {
     const query = search.toLowerCase().trim();
@@ -90,23 +94,24 @@ export default function FindStudyBuddyPage() {
       const matchesSearch =
         query === "" ||
         buddy.name.toLowerCase().includes(query) ||
-        buddy.subjects.some((subject) =>
-          subject.toLowerCase().includes(query)
-        );
+        buddy.subjects.some((subject) => subject.toLowerCase().includes(query));
 
       const matchesMode = mode === "All" || buddy.mode === mode;
-      const matchesSession =
-        session === "All" || buddy.session === session;
+      const matchesSession = session === "All" || buddy.session === session;
       const matchesTime = time === "All" || buddy.time === time;
 
-      return (
-        matchesSearch &&
-        matchesMode &&
-        matchesSession &&
-        matchesTime
-      );
+      return matchesSearch && matchesMode && matchesSession && matchesTime;
     });
   }, [search, mode, session, time]);
+  const sendConnectionRequest = (buddyId: number) => {
+    setConnectionRequests((current) => {
+      if (current.includes(buddyId)) {
+        return current;
+      }
+
+      return [...current, buddyId];
+    });
+  };
 
   const resetFilters = () => {
     setSearch("");
@@ -134,8 +139,8 @@ export default function FindStudyBuddyPage() {
           </h1>
 
           <p className="mt-4 text-base leading-7 text-[var(--text-secondary)] sm:text-lg">
-            Discover students who match your subjects, study style,
-            schedule, and goals.
+            Discover students who match your subjects, study style, schedule,
+            and goals.
           </p>
         </div>
 
@@ -170,9 +175,7 @@ export default function FindStudyBuddyPage() {
             {/* Filter heading */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-lg font-semibold">
-                  Refine your search
-                </h2>
+                <h2 className="text-lg font-semibold">Refine your search</h2>
 
                 <p className="mt-1 text-sm text-[var(--text-muted)]">
                   Find people who fit the way you study.
@@ -253,9 +256,7 @@ export default function FindStudyBuddyPage() {
         {/* Results heading */}
         <div className="mt-10 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-2xl font-bold">
-              Recommended StudyBuddies
-            </h2>
+            <h2 className="text-2xl font-bold">Recommended StudyBuddies</h2>
 
             <p className="mt-1 text-sm text-[var(--text-muted)]">
               {filteredBuddies.length}{" "}
@@ -280,9 +281,7 @@ export default function FindStudyBuddyPage() {
                     </div>
 
                     <div className="min-w-0">
-                      <h3 className="truncate font-semibold">
-                        {buddy.name}
-                      </h3>
+                      <h3 className="truncate font-semibold">{buddy.name}</h3>
 
                       <p className="mt-1 text-sm text-[var(--text-muted)]">
                         {buddy.mode} learner
@@ -315,13 +314,9 @@ export default function FindStudyBuddyPage() {
                 {/* Details */}
                 <div className="mt-5 grid grid-cols-2 gap-3">
                   <div className="rounded-xl bg-[var(--surface-soft)] p-3">
-                    <p className="text-xs text-[var(--text-muted)]">
-                      Session
-                    </p>
+                    <p className="text-xs text-[var(--text-muted)]">Session</p>
 
-                    <p className="mt-1 text-sm font-medium">
-                      {buddy.session}
-                    </p>
+                    <p className="mt-1 text-sm font-medium">{buddy.session}</p>
                   </div>
 
                   <div className="rounded-xl bg-[var(--surface-soft)] p-3">
@@ -329,15 +324,14 @@ export default function FindStudyBuddyPage() {
                       Best time
                     </p>
 
-                    <p className="mt-1 text-sm font-medium">
-                      {buddy.time}
-                    </p>
+                    <p className="mt-1 text-sm font-medium">{buddy.time}</p>
                   </div>
                 </div>
 
                 {/* Action */}
                 <button
                   type="button"
+                  onClick={() => setSelectedBuddy(buddy)}
                   className="mt-5 w-full rounded-xl bg-violet-500 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-400 active:scale-[0.98]"
                 >
                   View Profile
@@ -357,8 +351,7 @@ export default function FindStudyBuddyPage() {
             </h3>
 
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[var(--text-secondary)]">
-              Try changing your filters or searching for another
-              subject.
+              Try changing your filters or searching for another subject.
             </p>
 
             <button
@@ -371,7 +364,147 @@ export default function FindStudyBuddyPage() {
           </div>
         )}
       </section>
+      {/* Profile Modal */}
+      {selectedBuddy && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm"
+          onClick={() => setSelectedBuddy(null)}
+        >
+          <div
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-2xl sm:p-8"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex min-w-0 items-center gap-4">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/20 to-cyan-500/20 text-lg font-bold text-violet-300">
+                  {selectedBuddy.initials}
+                </div>
 
+                <div className="min-w-0">
+                  <h2 className="truncate text-xl font-bold sm:text-2xl">
+                    {selectedBuddy.name}
+                  </h2>
+
+                  <p className="mt-1 text-sm text-[var(--text-muted)]">
+                    {selectedBuddy.mode} learner
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                aria-label="Close profile"
+                onClick={() => setSelectedBuddy(null)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-lg text-[var(--text-muted)] transition hover:bg-[var(--surface-soft)] hover:text-[var(--text-primary)]"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Match */}
+            <div className="mt-6 rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm text-[var(--text-muted)]">
+                    Study compatibility
+                  </p>
+
+                  <p className="mt-1 text-lg font-semibold text-emerald-400">
+                    Excellent match
+                  </p>
+                </div>
+
+                <div className="text-2xl font-bold text-emerald-400">
+                  {selectedBuddy.match}%
+                </div>
+              </div>
+            </div>
+
+            {/* Bio */}
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                About
+              </h3>
+
+              <p className="mt-2 text-sm leading-7 text-[var(--text-secondary)]">
+                {selectedBuddy.bio}
+              </p>
+            </div>
+
+            {/* Subjects */}
+            <div className="mt-6">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-[var(--text-muted)]">
+                Subjects
+              </h3>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                {selectedBuddy.subjects.map((subject) => (
+                  <span
+                    key={subject}
+                    className="rounded-full border border-violet-500/20 bg-violet-500/10 px-3 py-1.5 text-sm text-violet-300"
+                  >
+                    {subject}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Study Details */}
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-2xl bg-[var(--surface-soft)] p-4">
+                <p className="text-xs text-[var(--text-muted)]">Study mode</p>
+
+                <p className="mt-1 text-sm font-semibold">
+                  {selectedBuddy.mode}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-[var(--surface-soft)] p-4">
+                <p className="text-xs text-[var(--text-muted)]">Session</p>
+
+                <p className="mt-1 text-sm font-semibold">
+                  {selectedBuddy.session}
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-[var(--surface-soft)] p-4">
+                <p className="text-xs text-[var(--text-muted)]">Best time</p>
+
+                <p className="mt-1 text-sm font-semibold">
+                  {selectedBuddy.time}
+                </p>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => setSelectedBuddy(null)}
+                className="flex-1 rounded-xl border border-[var(--border)] px-4 py-3 text-sm font-semibold text-[var(--text-secondary)] transition hover:bg-[var(--surface-soft)] hover:text-[var(--text-primary)]"
+              >
+                Close
+              </button>
+
+              <button
+                type="button"
+                onClick={() => sendConnectionRequest(selectedBuddy.id)}
+                disabled={connectionRequests.includes(selectedBuddy.id)}
+                className={`flex-1 rounded-xl px-4 py-3 text-sm font-semibold text-white transition active:scale-[0.98] ${
+                  connectionRequests.includes(selectedBuddy.id)
+                    ? "cursor-not-allowed bg-emerald-500"
+                    : "bg-violet-500 hover:bg-violet-400"
+                }`}
+              >
+                {connectionRequests.includes(selectedBuddy.id)
+                  ? "✓ Request Sent"
+                  : "Send Connection Request"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Footer />
     </main>
   );
