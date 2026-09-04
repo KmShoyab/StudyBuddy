@@ -284,3 +284,161 @@ body {
 * {
   max-width: 100%;
 }
+/* =========================================
+   StudyBuddy UX & Accessibility Polish
+   ========================================= */
+
+/* Better keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 3px;
+}
+
+/* Remove default outline only when focus-visible is supported */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible),
+select:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Better touch experience on mobile */
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent accidental text selection on interactive elements */
+button,
+a {
+  user-select: none;
+}
+
+/* Better input behavior */
+input,
+textarea,
+select {
+  max-width: 100%;
+}
+
+/* Make disabled controls clearly disabled */
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Smooth interactive elements */
+button,
+a,
+input,
+textarea,
+select {
+  transition:
+    color 200ms ease,
+    background-color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease,
+    opacity 200ms ease,
+    transform 200ms ease;
+}
+
+/* Better mobile spacing */
+@media (max-width: 640px) {
+  button,
+  a {
+    min-height: 40px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Prevent iOS zoom when focusing form controls */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Page entrance animation */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 400ms ease-out both;
+}
+
+/* Simple loading shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--surface-soft) 25%,
+    var(--surface-elevated) 50%,
+    var(--surface-soft) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s linear infinite;
+}
+
+/* Better scrolling on mobile */
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Avoid content jumping because of scrollbar appearance */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* High contrast selection */
+::selection {
+  background: rgba(139, 92, 246, 0.35);
+  color: var(--text-primary);
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .loading-shimmer {
+    animation: none !important;
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    transition: none !important;
+  }
+}
